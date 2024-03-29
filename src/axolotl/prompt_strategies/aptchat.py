@@ -25,7 +25,7 @@ class PygmalionPromptTokenizingStrategy(PromptTokenizingStrategy):
 
     def __init__(self, prompter, tokenizer, *args, **kwargs):
         super().__init__(prompter, tokenizer, *args, **kwargs)
-        res = self._tokenize("<|model|>", add_eos_token=False, strip_bos_token=True)
+        res = self._tokenize("<|im_start|>assistant", add_eos_token=False, strip_bos_token=True)
         self.bot_prefix_token_ids = res["input_ids"]
 
     def tokenize_prompt(self, prompt):
