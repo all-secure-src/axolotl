@@ -8,7 +8,7 @@ strict: false
 
 datasets:
   - path: communityai/aptchat-v2-general-12k
-    type: aptchat
+    type: aptchat3
 dataset_prepared_path:
 val_set_size: 0.05
 output_dir: ./out
@@ -56,3 +56,6 @@ weight_decay: 0.0
 fsdp:
 fsdp_config:
 special_tokens:
+special_tokens:
+tokens: # these are delimiters
+  - "<|im_start|>"

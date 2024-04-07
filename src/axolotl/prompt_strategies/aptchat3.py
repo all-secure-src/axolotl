@@ -28,7 +28,7 @@ class PygmalionPromptTokenizingStrategy(PromptTokenizingStrategy):
         res = self._tokenize("<|im_start|>assistant", add_eos_token=False, strip_bos_token=True)
         self.bot_prefix_token_ids = res["input_ids"]
 
-    # Add token = <|im_start|>, EOS Token = <|im_end|>
+    # Add token = <|im_start|>
     def tokenize_prompt(self, prompt):
         result, current_len = tokenize_prompt_default()
         for _, part in enumerate(self.prompter.build_prompt(prompt["conversations"])):
@@ -36,7 +36,7 @@ class PygmalionPromptTokenizingStrategy(PromptTokenizingStrategy):
             if role == "system":
                 prefix = "<|im_start|>system"
                 res = self._tokenize(
-                    prefix + "\n" + message.strip() + "<|im_end|>\n",
+                    prefix + "\n" + message.strip() + f"{self.tokenizer.eos_token}\n",
                     add_eos_token=False,
                     strip_bos_token=False,
                 )
@@ -45,7 +45,7 @@ class PygmalionPromptTokenizingStrategy(PromptTokenizingStrategy):
             elif role == "user" or role == "human":
                 prefix = "<|im_start|>user"
                 res = self._tokenize(
-                    prefix + "\n" + message.strip() + "<|im_end|>\n",
+                    prefix + "\n" + message.strip() + f"{self.tokenizer.eos_token}\n",
                     add_eos_token=False,
                     strip_bos_token=True,
                 )
@@ -54,7 +54,7 @@ class PygmalionPromptTokenizingStrategy(PromptTokenizingStrategy):
             elif role == "assistant" or role == "gpt" or role == "bot" or role == "model":
                 prefix = "<|im_start|>assistant"
                 res = self._tokenize(
-                    prefix + "\n" + message.strip() + "<|im_end|>\n",
+                    prefix + "\n" + message.strip() + f"{self.tokenizer.eos_token}\n",
                     add_eos_token=False,
                     strip_bos_token=True,
                 )

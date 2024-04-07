@@ -25,37 +25,38 @@ class PygmalionPromptTokenizingStrategy(PromptTokenizingStrategy):
 
     def __init__(self, prompter, tokenizer, *args, **kwargs):
         super().__init__(prompter, tokenizer, *args, **kwargs)
-        res = self._tokenize("<|im_start|>assistant", add_eos_token=False, strip_bos_token=True)
+        res = self._tokenize("<|assistant|>", add_eos_token=False, strip_bos_token=True)
         self.bot_prefix_token_ids = res["input_ids"]
+        self.eos_token = res.eos_token
+        print("EOS TOKEN - ", self.eos_token)
 
-    # Add token = <|im_start|>, EOS Token = <|im_end|>
     def tokenize_prompt(self, prompt):
         result, current_len = tokenize_prompt_default()
         for _, part in enumerate(self.prompter.build_prompt(prompt["conversations"])):
             role, message = part
             if role == "system":
-                prefix = "<|im_start|>system"
+                prefix = "<|system|>"
                 res = self._tokenize(
-                    prefix + "\n" + message.strip() + "<|im_end|>\n",
-                    add_eos_token=False,
+                    prefix + " " + message.strip(),
+                    add_eos_token=True,
                     strip_bos_token=False,
                 )
                 # everything from this is masked out from the labels
                 labels = [IGNORE_TOKEN_ID] * len(res["input_ids"])
             elif role == "user" or role == "human":
-                prefix = "<|im_start|>user"
+                prefix = "<|user|>"
                 res = self._tokenize(
-                    prefix + "\n" + message.strip() + "<|im_end|>\n",
-                    add_eos_token=False,
+                    prefix + " " + message.strip(),
+                    add_eos_token=True,
                     strip_bos_token=True,
                 )
                 # everything from this is masked out from the labels
                 labels = [IGNORE_TOKEN_ID] * len(res["input_ids"])
             elif role == "assistant" or role == "gpt" or role == "bot" or role == "model":
-                prefix = "<|im_start|>assistant"
+                prefix = "<|assistant|>"
                 res = self._tokenize(
-                    prefix + "\n" + message.strip() + "<|im_end|>\n",
-                    add_eos_token=False,
+                    prefix + " " + message.strip(),
+                    add_eos_token=True,
                     strip_bos_token=True,
                 )
                 # mask out the prefix token, rest is not masked out from labels
@@ -90,7 +91,10 @@ class PygmalionPrompter:
         self, source, *args, **kwargs  # pylint: disable=unused-argument
     ) -> Generator[Tuple[str, str], None, None]:
         for msg in source:
-            yield msg["role"], msg["content"]
+            if 'content' in msg:
+                yield msg["role"], msg["content"]
+            else:
+                yield msg["role"], msg["value"]
 
 
 def load(tokenizer, cfg):
