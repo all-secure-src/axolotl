@@ -7,8 +7,8 @@ load_in_4bit: false
 strict: false
 
 datasets:
-  - path: communityai/aptchat-v2-general-12k
-    type: aptchat3
+  - path: communityai/aptchat-code-math-0.5k
+    type: aptchat2
 dataset_prepared_path:
 val_set_size: 0.05
 output_dir: ./out
