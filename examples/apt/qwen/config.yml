@@ -1,0 +1,105 @@
+base_model: Qwen/Qwen1.5-72B-Chat
+model_type: Qwen2ForCausalLM
+tokenizer_type: Qwen2Tokenizer
+
+load_in_8bit: false
+load_in_4bit: false
+strict: false
+
+datasets:
+  - path: communityai/HuggingFaceH4___SystemChat
+    type: aptchat2
+  - path: communityai/system_identity
+    type: aptchat2
+  - path: communityai/cognitivecomputations___samantha-data
+    type: aptchat2
+  # - path: communityai/HuggingFaceH4___Code-Feedback
+  #   type: aptchat2
+  # - path: communityai/CohereForAI___aya_dataset
+  #   type: aptchat2
+  - path: communityai/HuggingFaceH4___airoboros-3.2
+    type: aptchat2
+  - path: communityai/HuggingFaceH4___no_robots
+    type: aptchat2
+  # - path: communityai/HuggingFaceH4___capybara
+  #   type: aptchat2
+  # - path: communityai/HuggingFaceH4___deita-10k-v0-sft
+  #   type: aptchat2
+  # - path: communityai/communityai_apt-instruct-code-micro-100k
+  #   type: aptchat2
+  # - path: communityai/ise-uiuc___Magicoder-Evol-Instruct-110K
+  #   type: aptchat2
+  - path: communityai/ise-uiuc___Magicoder-OSS-Instruct-75K
+    type: aptchat2
+  - path: communityai/gretelai___synthetic_text_to_sql-10k
+    type: aptchat2
+  # - path: communityai/akjindal53244___Arithmo-Data-50k
+  #   type: aptchat2
+  # - path: communityai/HuggingFaceH4___OpenHermes-2.5-preferences-v0-deduped-300k
+  #   type: aptchat2
+  # - path: communityai/Open-Orca___1million-gpt-4-150k
+  #   type: aptchat2
+  - path: communityai/ravithejads___samvaad-hi-filtered
+    type: aptchat2
+  - path: communityai/HydraIndicLM___hindi_alpaca_dolly_67k
+    type: aptchat2
+  # - path: communityai/Telugu-LLM-Labs___telugu_alpaca_yahma_cleaned_filtered_romanized
+  #   type: aptchat2
+  # - path: communityai/Telugu-LLM-Labs___telugu_teknium_GPTeacher_general_instruct_filtered_romanized
+  #   type: aptchat2
+  # - path: communityai/Telugu-LLM-Labs___marathi_alpaca_yahma_cleaned_filtered
+  #   type: aptchat2
+  # - path: communityai/abhinand___tamil-alpaca
+  #   type: aptchat2
+  # - path: communityai/yahma___alpaca-cleaned
+  #   type: aptchat2
+  # - path: communityai/Tensoic___Alpaca-Gujarati
+  #   type: aptchat2
+dataset_prepared_path:
+val_set_size: 0.001
+output_dir: ./out
+
+sequence_len: 16384
+sample_packing: true
+pad_to_sequence_len: true
+eval_sample_packing: false
+
+wandb_project:
+wandb_entity:
+wandb_watch:
+wandb_name:
+wandb_log_model:
+
+gradient_accumulation_steps: 8
+micro_batch_size: 2
+num_epochs: 2
+optimizer: adamw_bnb_8bit
+lr_scheduler: cosine
+learning_rate: 0.000005
+
+train_on_inputs: false
+group_by_length: false
+bf16: auto
+fp16:
+tf32: false
+
+gradient_checkpointing: true
+early_stopping_patience:
+resume_from_checkpoint:
+local_rank:
+logging_steps: 1
+xformers_attention:
+flash_attention: true
+
+warmup_steps: 10
+evals_per_epoch: 4
+eval_table_size:
+eval_max_new_tokens: 128
+saves_per_epoch: 1
+debug:
+deepspeed:
+weight_decay: 0.0
+fsdp:
+fsdp_config:
+special_tokens:
+tokens:
